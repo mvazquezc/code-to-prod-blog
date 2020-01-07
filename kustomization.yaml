@@ -1,5 +1,5 @@
 bases:
-- github.com/mvazquezc/app-config//
+- github.com/mvazquezc/code-to-prod-blog?ref=config
 - namespace.yaml
 patchesStrategicMerge:
 - deployment.yaml
