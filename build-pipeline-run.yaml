@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: reverse-words-build-pipeline-run-
+spec:
+  pipelineRef:
+    name: reverse-words-build-pipeline
+  serviceAccounts:
+    - taskName: build-and-push
+      serviceAccount: reversewords-pipeline
+  params:
+    - name: imageTag
+      value: "testing"
+  resources:
+    - name: app-git
+      resourceRef:
+        name: reverse-words-git
+    - name: app-image
+      resourceRef:
+        name: reverse-words-image

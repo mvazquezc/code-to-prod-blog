@@ -1,0 +1,84 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: reverse-words-git
+spec:
+  type: git
+  params:
+  - name: url
+    value: https://github.com/mvazquezc/reverse-words
+---
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: reverse-words-image
+spec:
+  type: image
+  params:
+  - name: url
+    value: quay.io/mavazque/tekton-reversewords
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: reverse-words-build-pipeline
+spec:
+  resources:
+  - name: app-git
+    type: git
+  - name: app-image
+    type: image
+  params:
+  - name: imageTag
+    type: string
+    default: latest
+    description: Tag for the built image
+  tasks:
+
+  - name: lint
+    taskRef:
+      name: golangci-lint
+    params:
+      - name: package
+        value: github.com/mvazquezc/reverse-words
+      - name: flags
+        value: --verbose
+      - name: GOOS
+        value: "linux"
+    resources:
+      inputs:
+      - name: source
+        resource: app-git
+
+  - name: test
+    taskRef:
+      name: golang-test
+    runAfter:
+      - lint
+    params:
+      - name: package
+        value: github.com/mvazquezc/reverse-words
+      - name: GOOS
+        value: "linux"
+    resources:
+      inputs:
+      - name: source
+        resource: app-git
+
+  - name: build-and-push
+    taskRef:
+      name: build-from-dockerfile
+    runAfter:
+      - test
+    params:
+      - name: DOCKERFILE_PATH
+        value: "./Dockerfile"
+      - name: IMAGE_TAG
+        value: "$(params.imageTag)"
+    resources:
+      inputs:
+      - name: source
+        resource: app-git
+      outputs:
+      - name: image
+        resource: app-image
