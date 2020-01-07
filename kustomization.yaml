@@ -1,0 +1,5 @@
+bases:
+- github.com/mvazquezc/app-config//
+- namespace.yaml
+patchesStrategicMerge:
+- deployment.yaml
