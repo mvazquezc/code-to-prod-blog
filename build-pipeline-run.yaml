@@ -5,9 +5,9 @@ metadata:
 spec:
   pipelineRef:
     name: reverse-words-build-pipeline
-  serviceAccounts:
+  serviceAccountNames:
     - taskName: build-and-push
-      serviceAccount: reversewords-pipeline
+      serviceAccountName: reversewords-pipeline
   params:
     - name: imageTag
       value: "testing"
