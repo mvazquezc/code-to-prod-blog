@@ -6,7 +6,7 @@ spec:
   type: git
   params:
   - name: url
-    value: https://github.com/mvazquezc/reverse-words
+    value: https://github.com/senthil4865/reverse-words
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
@@ -16,7 +16,7 @@ spec:
   type: image
   params:
   - name: url
-    value: quay.io/mavazque/tekton-reversewords
+    value: quay.io/senthil4865/tekton-reversewords
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -40,7 +40,7 @@ spec:
       name: golangci-lint
     params:
       - name: package
-        value: github.com/mvazquezc/reverse-words
+        value: github.com/senthil4865/reverse-words
       - name: flags
         value: --verbose
       - name: GOOS
@@ -57,7 +57,7 @@ spec:
       - lint
     params:
       - name: package
-        value: github.com/mvazquezc/reverse-words
+        value: github.com/senthil4865/reverse-words
       - name: GOOS
         value: "linux"
     resources:
